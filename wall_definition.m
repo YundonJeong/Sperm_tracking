@@ -32,13 +32,13 @@ wall_coord_yrev = [wall_coord(:,1), img_size(2)-wall_coord(:,2)+1];
 
 % scaling in micron
 scan_size = 776.72; % [um]
-scanning_pixel = 512; % acquired image pixel size(square), [px.]
+scanning_pixel = 512; % pixel size of the acquired image(square), [px.]
 mag = 5; % x
 fprintf('\nThe parameters are set as :\n      scan size = %.2f\n      scanning pixel = %u\n      magnification = %.2f\n',scan_size, scanning_pixel, mag);
 disp("Move to 'wall_definition.m' to modify.")
-px_num = img_size(1); % square
+px_num = img_size(1);
 x_max_micron = scan_size / mag * img_size(1)/scanning_pixel;
-scale = scan_size / mag /scanning_pixel ; % [um/px.] %size of one pixel()
+scale = scan_size / mag /scanning_pixel ; % [um/px.] % scaling factor to define the size of field-of-view
 wall_coord_yrev_micron = wall_coord_yrev * scale;
 
 % write coordinates into csv file
