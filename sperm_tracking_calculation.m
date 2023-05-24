@@ -33,57 +33,9 @@ wall_coord_micron = wall_coord * scale;
 wall_fit_coord_micron = wall_fit_coord_px * scale;
 fr2sec = 1/30; % [sec] image acquiring rate (frame/second) e.g., 30hz = 1/30
 
-%% plot whole data point and wall
-% data = data_micron;
-% figure(1), scatter(data(:,2),data(:,3), 4, 'filled'), axis image; xlim([0 x_max_micron]), ylim([0 x_max_micron]);
-% hold on
-% scatter(wall_coord_micron(:,1),wall_coord_micron(:,2), 4, 'filled'), axis image; xlim([0 x_max_micron]), ylim([0 x_max_micron]);
-% set(gca, 'Ydir', 'reverse')
-
-%% select id
-% id_list = [unique(data(:,1))]; % sperm id number list
-% id = id_list(10); % 1 to numel(id_list)
-
-%% plot individual data
-% data_id = data((id==data(:,1)),:); % extract corresponding id data
-% data_id = sortrows(data_id,4); % sort data by frame number
-% frame_id = data_id(:,4);
-% frame_num = size(frame_id,1);
-% for frame = 1 : frame_num
-% figure(2), scatter(data_id(frame,2),data_id(frame,3), 4,[0 0.4470 0.7410],'filled'), title(strcat('ID = ',num2str(id),', frame number :  ', num2str(frame_id(frame))));
-% hold on
-% scatter(wall_coord_micron(:,1),wall_coord_micron(:,2), 4, [0.8500 0.3250 0.0980],'filled')
-% scatter(wall_fit_coord_micron(:,1),wall_fit_coord_micron(:,2), 4, [0.9290 0.6940 0.1250],'filled')
-% set(gca,'XAxisLocation','top','YAxisLocation','left','ydir','reverse');
-% axis image%, xlim([0 x_max_micron]), ylim([0 x_max_micron]);
-% pause(0.1)
-% end
-
 %% plot entire track sets
 data = data_micron;
 id_list = [unique(data(:,1))]; % sperm id number list
-
-% for count = 1 : numel(id_list)
-% id = id_list(count);
-% data_id = data((id==data(:,1)),:); % extract corresponding id data
-% figure(4151), scatter(data_id(:,2),data_id(:,3), 4,[0 0.4470 0.7410],'filled')
-% hold on
-% scatter(wall_coord_micron(:,1),wall_coord_micron(:,2), 4, [0.8500 0.3250 0.0980],'filled')
-% scatter(wall_fit_coord_micron(:,1),wall_fit_coord_micron(:,2), 4, [0.9290 0.6940 0.1250],'filled')
-% set(gca,'XAxisLocation','top','YAxisLocation','left','ydir','reverse');
-% axis image, xlim([0 x_max_micron]), ylim([0 x_max_micron]);
-% title(strcat('ID = ',num2str(id),' (',num2str(count),'th)'))
-% pause(0.1)
-% hold off
-% end
-% 
-% figure(4151), scatter(data(:,2),data(:,3),4,[0 0.4470 0.7410],'filled');
-% hold on
-% scatter(wall_coord_micron(:,1),wall_coord_micron(:,2), 4, [0.8500 0.3250 0.0980],'filled')
-% scatter(wall_fit_coord_micron(:,1),wall_fit_coord_micron(:,2), 4, [0.9290 0.6940 0.1250],'filled')
-% set(gca,'XAxisLocation','top','YAxisLocation','left','ydir','reverse');
-% axis image, xlim([0 x_max_micron]), ylim([0 x_max_micron]);
-% hold off
 
 for count = 1 : numel(id_list)
     id = id_list(count);
@@ -100,122 +52,7 @@ for count = 1 : numel(id_list)
 end
 hold off
 
-%% calculate minimal distance from wall - curved wall, needed to be modified to use
-% wall_num = size(wall_coord,1); % coordinate number that consists of wall
-% % calculate minimal distance
-% distance_id = zeros([1 frame_num]);
-% for frame = 1 : frame_num
-%     distance = zeros(size([1 wall_num]));
-%     for coord = 1 : wall_num
-%         distance(coord) = norm(wall_coord(coord,[1 2])-data_id(frame,[2 3]));
-%     end
-%     distance_id(frame) = min(distance); % minimal distance of each frame
-% end
-% figure(3), plot(frame_id, distance_id, 'o-')
-% title(strcat('Minimal distance from the wall, ID = ',num2str(id))), xlabel('frame'), ylabel('minimal distance [px.]')
-% 
-% % calculate speed
-% speed_id = zeros([1 frame_num]);
-% for frame = 1 : frame_num - 1
-%     if frame == frame_num
-%         speed_id(frame) = 0;
-%     else
-%         speed_id(frame) = norm(data_id(frame+1,[2 3]) - data_id(frame,[2 3]))/(frame_id(frame+1)-frame_id(frame));
-%     end
-% end
-% figure(4), plot(frame_id, speed_id, 'o-')
-% title(strcat('Speed per frame, ID = ',num2str(id))), xlabel('frame'), ylabel('speed [px./frame]')
-% 
-% %% plot speed - minimal distance graph
-% figure(5), scatter(distance_id(1:end-1), speed_id(1:end-1), 10)
-% xlabel('Minimal distance [px.]'), ylabel('Speed [px./fm]'); grid on;
-% title(strcat('Speed-Minimal distance graph, ID = ',num2str(id),', frame number : ',num2str(frame_num-1)));
-
-%% plot distribution graph of all data - curved wall
-% distance_all = [];
-% speed_all = [];
-% id_list = [unique(data(:,1))]; % sperm id number list
-% sperm_num = numel(id_list);
-% for sperm = 1 : sperm_num
-% % select sperm
-% id = id_list(sperm);
-% data_id = data((id==data(:,1)),:); % extract corresponding id data
-% data_id = sortrows(data_id,4); % sort data by frame number
-% frame_id = data_id(:,4);
-% frame_num = size(frame_id,1);
-% wall_num = size(wall_coord_micron,1); % coordinate number that consists of wall
-% % calculate minimal distance
-% distance_id = zeros([1 frame_num]);
-% for frame = 1 : frame_num
-%     distance = zeros(size([1 wall_num]));
-%     for coord = 1 : wall_num
-%         distance(coord) = norm(wall_coord_micron(coord,[1 2])-data_id(frame,[2 3]));
-%     end
-%     distance_id(frame) = min(distance); % minimal distance of each frame
-% end
-% % calculate speed
-% speed_id = zeros([1 frame_num]);
-% for frame = 1 : frame_num
-%     if frame == frame_num
-%         speed_id(frame) = NaN;
-%     else
-%         speed_id(frame) = norm(data_id(frame+1,[2 3]) - data_id(frame,[2 3]))/(frame_id(frame+1)-frame_id(frame));
-%     end
-% end
-% % save data
-% distance_all = [distance_all distance_id(1:end-1)];
-% speed_all = [speed_all speed_id(1:end-1)];
-% end
-% figure(7), scatter(distance_all, speed_all, 5)
-% xlabel('Minimal distance [micron]'), ylabel('Speed [micron/fm]'); grid on;
-% title(strcat('Speed-Minimal distance distribution of all sample points, data number : ', num2str(numel(distance_all))));
-% 
-% writematrix([[0 distance_all/scale]' [0 speed_all/scale/fr2sec]'],'trackingdata_yundon_curved_wall_220502.csv')
-% header = [distance from curved wall[um] speed[um/s]]
-
-%% plot distribution graph of all data - straight wall
-distance_all = [];
-speed_all = [];
-id_list = [unique(data(:,1))]; % sperm id number list
-sperm_num = numel(id_list);
-for sperm = 1 : sperm_num
-% select sperm
-id = id_list(sperm);
-data_id = data((id==data(:,1)),:); % extract corresponding id data
-data_id = sortrows(data_id,4); % sort data by frame number
-frame_id = data_id(:,4);
-frame_num = size(frame_id,1);
-wall_fit_num = size(wall_fit_coord_micron,1); % coordinate number that consists of wall
-% calculate minimal distance
-distance_id = zeros([1 frame_num]);
-for frame = 1 : frame_num
-    distance = zeros(size([1 wall_fit_num]));
-    for coord = 1 : wall_fit_num
-        distance(coord) = norm(wall_fit_coord_micron(coord,[1 2])-data_id(frame,[2 3]));
-    end
-    distance_id(frame) = min(distance); % minimal distance of each frame
-end
-% calculate speed
-speed_id = zeros([1 frame_num]);
-for frame = 1 : frame_num
-    if frame == frame_num
-        speed_id(frame) = NaN;
-    else
-        speed_id(frame) = norm(data_id(frame+1,[2 3]) - data_id(frame,[2 3]))/(frame_id(frame+1)-frame_id(frame));
-    end
-end
-% save data
-distance_all = [distance_all distance_id(1:end-1)];
-speed_all = [speed_all speed_id(1:end-1)];
-end
-figure(6), scatter(distance_all, speed_all, 5)
-xlabel('Minimal distance [micron]'), ylabel('Speed [micron/fm]'); grid on;
-title(strcat('Speed-Minimal distance distribution of all sample points, data number : ', num2str(numel(distance_all))));
-
-% writematrix([[0 distance_all/scale]' [0 speed_all/scale/fr2sec]'],'trackingdata_yundon_straight_wall_220502.csv')
-% header = [distance from straight wall[um] speed[um/s]]
-
-%% calculate data and save as a file
+%% calculate data and save as file
 
 id_list = [unique(data(:,1))]; % sperm id number list
 sperm_num = numel(id_list);
@@ -353,14 +190,12 @@ excel_csv = [excel_csv; excel_csv_frame];
 end
 calculated_parameter_csv = excel_csv(2:end,:);
 
-
 %% write data matrix into csv file
 table_calculated_parameter_csv = array2table(calculated_parameter_csv);
 table_calculated_parameter_csv.Properties.VariableNames(1:14) = {'Track ID','Order','Frame number','Distance from straight wall [um]','Distance from curved wall [um]','Speed per frame [um/s]','Number of frames','Radian from wall [deg.]','Total distance of target sperm [um]','Displacement of target sperm [um]','Distance from straight wall to mid-point [um]','Distance from curved wall to mid-point [um]','Width [um]','Interlink radian [deg.]'};
 filename_1 = strcat('tracks_mag',num2str(mag),'x.csv');
 writetable(table_calculated_parameter_csv, filename_1)
 disp(strcat('Calculated parameters are exported as "',filename_1,'"'))
-
 
 %% pivot table
 id_num = numel(id_list);
