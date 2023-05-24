@@ -218,12 +218,12 @@ for id = 1 : id_num
     temp = calculated_parameter_csv(extract_id_matrix,9);
     pivot(id,5) = temp(1); % total_distance
 
-    pivot(id,6) = pivot(id,5)./pivot(id,3); % tts
+    pivot(id,6) = pivot(id,5)./pivot(id,3); % vcl
 
     temp = calculated_parameter_csv(extract_id_matrix,10);
     pivot(id,7) = temp(1); % displacement
     
-    pivot(id,8) = pivot(id,7)./pivot(id,3); % sls
+    pivot(id,8) = pivot(id,7)./pivot(id,3); % vsl
     
     pivot(id,9) = pivot(id,8)./pivot(id,6); % lin
     
@@ -241,7 +241,7 @@ for id = 1 : id_num
 end
 
 table_pivot = array2table(pivot);
-table_pivot.Properties.VariableNames(1:13) = {'track_id','f_final-f_initial','track_duration','angle_from_wall','total_distance','tts','displacement','sls','lin','distance_from_fitted_wall_to_mid_point','distance_from_curved_wall_to_mid_point','mean_of_interlink_angle','straight_width_ratio'};
+table_pivot.Properties.VariableNames(1:13) = {'track_id','f_final-f_initial','track_duration','angle_from_wall','total_distance','vcl','displacement','vsl','lin','distance_from_fitted_wall_to_mid_point','distance_from_curved_wall_to_mid_point','mean_of_interlink_angle','straight_width_ratio'};
 filename_2 = strcat('summary_tracks_mag',num2str(mag),'x.csv');
 writetable(table_pivot, filename_2)
 disp(strcat('Pivot table are exported as "',filename_2,'"'))
