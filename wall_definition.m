@@ -1,24 +1,18 @@
-% define wall coordinates from tiff image
+% define wall coordinates from tif image
 % Assumptions
-% 1. The tiff image consists of RGB channels with integer-type elements.
-% 2. The uterus wall (where does not include sperms) must be represented in
-% white color, or identically, (R=255,G=255,B=255).
+% 1. The tif image consists of RGB channels filled with integer-type elements.
+% 2. Uterine wall and the outside must be represented as white, or identically (R=255,G=255,B=255) in the image.
 
 filename = 'wall.tif'; % input name of the tiff file to define wall
-wall_tif = imread(filename); % read tiff file of the averaged sperm tracking images
+wall_tif = imread(filename);
 
 wall_sum = double(wall_tif(:,:,1))+double(wall_tif(:,:,2))+double(wall_tif(:,:,3));
 wall_sum = max(wall_sum(:))-wall_sum;
-% figure,imagesc(wall_sum)
 wall = double(wall_sum>=1);
-% figure,imagesc(wall)
 
 wall_line_x = double(abs(circshift(wall,1,2) - wall)>=1); wall_line_x(:,1) = 0;
-% figure,imagesc(wall_line_x)
 wall_line_y = double(abs(circshift(wall,1,1) - wall)>=1); wall_line_y(1,:) = 0;
-% figure,imagesc(wall_line_y)
 wall_line = double(abs(wall_line_x + wall_line_y)>=1);
-% figure,imagesc(wall_line)
 
 img_size = size(wall_line);
 wall_coord = [0 0;];
@@ -30,7 +24,6 @@ for i = 1 : img_size(1)
     end
 end
 wall_coord = wall_coord(2:end,:);
-
 
 %% export coordinate data to csv file
 
@@ -48,8 +41,7 @@ x_max_micron = scan_size / mag * img_size(1)/scanning_pixel;
 scale = scan_size / mag /scanning_pixel ; % [um/px.] %size of one pixel()
 wall_coord_yrev_micron = wall_coord_yrev * scale;
 
-
-% write coordinate data into csv file
+% write coordinates into csv file
 table_wall_coord_csv = array2table([wall_coord_yrev,wall_coord_yrev_micron]);
 table_wall_coord_csv.Properties.VariableNames(1:4) = {'x','y_reversed','x_micron','y_reversed_micron'};
 writetable(table_wall_coord_csv,strcat(filename(1:end-4),'_coordinates.csv'))
